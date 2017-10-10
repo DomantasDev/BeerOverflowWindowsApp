@@ -1,4 +1,6 @@
-﻿namespace BeerOverflowWindowsApp
+﻿using BeerOverflowWindowsApp.BarRaters;
+
+namespace BeerOverflowWindowsApp
 {
     partial class MainWindow
     {
@@ -42,7 +44,7 @@
             this.ButtonSortByTitle = new System.Windows.Forms.Button();
             this.ButtonSortByRating = new System.Windows.Forms.Button();
             this.ButtonSortByDistance = new System.Windows.Forms.Button();
-            this.manualBarRating = new BeerOverflowWindowsApp.ManualBarRating();
+            this.manualBarRating = new ManualBarRating();
             ((System.ComponentModel.ISupportInitialize)(this.BarDataGridView)).BeginInit();
             this.SuspendLayout();
             // 

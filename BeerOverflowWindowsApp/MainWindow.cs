@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using BeerOverflowWindowsApp.BarComparers;
+using BeerOverflowWindowsApp.BarProviders;
 using BeerOverflowWindowsApp.DataModels;
 
 namespace BeerOverflowWindowsApp
