@@ -1,18 +1,13 @@
-﻿using BeerOverflowWindowsApp.Properties;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Diagnostics;
+using BeerOverflowWindowsApp.Properties;
 
-namespace BeerOverflowWindowsApp
+namespace BeerOverflowWindowsApp.BarRaters
 {
     public partial class ManualBarRating : Control
     {
@@ -24,15 +19,15 @@ namespace BeerOverflowWindowsApp
             get { return imageSize; }
             set
             {
-                this.imageSize = value;
-                this.SetImages();
-                this.MinimumSize = new Size(imageSize * 5, imageSize);
-                this.MaximumSize = new Size(imageSize * 5, imageSize);
+                imageSize = value;
+                SetImages();
+                MinimumSize = new Size(imageSize * 5, imageSize);
+                MaximumSize = new Size(imageSize * 5, imageSize);
                 for (int i = 0; i < 5; i++)
                 {
                     beerGlassList[i] = (new Rectangle(i * imageSize, 0, imageSize, imageSize));
                 }
-                this.Refresh();
+                Refresh();
             }
         }
 
@@ -44,12 +39,12 @@ namespace BeerOverflowWindowsApp
         ToolTip toolTip;
         public ManualBarRating()
         {
-            this.DoubleBuffered = true;
+            DoubleBuffered = true;
             InitializeComponent();
-            this.imageSize = 100;
-            this.MinimumSize = new Size(imageSize * 5, imageSize);
-            this.MaximumSize = new Size(imageSize * 5, imageSize);
-            this.beerGlassList = new List<Rectangle>(5);
+            imageSize = 100;
+            MinimumSize = new Size(imageSize * 5, imageSize);
+            MaximumSize = new Size(imageSize * 5, imageSize);
+            beerGlassList = new List<Rectangle>(5);
             for(int i = 0; i < 5; i++)
             {
                 beerGlassList.Add(new Rectangle(i * imageSize, 0, imageSize, imageSize));
@@ -75,9 +70,9 @@ namespace BeerOverflowWindowsApp
             }
         }
 
-        Boolean mouseEntered = false;
-        private int numberOfGlasses = 0;
-        private void ManualBarRating_MouseEnter(object sender, System.EventArgs e)
+        Boolean mouseEntered;
+        private int numberOfGlasses;
+        private void ManualBarRating_MouseEnter(object sender, EventArgs e)
         {
             mouseEntered = true;
         }
@@ -99,7 +94,7 @@ namespace BeerOverflowWindowsApp
             }
         }
 
-        private void ManualBarRating_MouseLeave(object sender, System.EventArgs e)
+        private void ManualBarRating_MouseLeave(object sender, EventArgs e)
         {
             lastLocation = -1;
             toolTip.Hide(this);

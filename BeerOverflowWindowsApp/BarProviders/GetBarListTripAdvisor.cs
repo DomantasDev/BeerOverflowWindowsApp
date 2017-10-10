@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
-using Newtonsoft.Json;
 using BeerOverflowWindowsApp.DataModels;
+using Newtonsoft.Json;
 using static BeerOverflowWindowsApp.DataModels.TripAdvisorDataModel;
 
-namespace BeerOverflowWindowsApp
+namespace BeerOverflowWindowsApp.BarProviders
 {
     class GetBarListTripAdvisor : IBeerable
     {
@@ -54,25 +55,18 @@ namespace BeerOverflowWindowsApp
 
         private List<BarData> PlacesApiQueryResponseToBars(PlacesResponse resultData, string radius)
         {
-            var barList = new List<BarData>();
-            foreach (var result in resultData.data)
-            {
-                var distanceMeters = convertMilesToMeters(double.Parse(result.distance, CultureInfo.InvariantCulture));
-                if ((int) distanceMeters <= int.Parse(radius))
+            return (from result in resultData.data
+                let distanceMeters = ConvertMilesToMeters(double.Parse(result.distance, CultureInfo.InvariantCulture))
+                where (int) distanceMeters <= int.Parse(radius)
+                select new BarData
                 {
-                    var newBar = new BarData
-                    {
-                        Title = result.name,
-                        Latitude = double.Parse(result.location.latitude, CultureInfo.InvariantCulture),
-                        Longitude = double.Parse(result.location.longitude, CultureInfo.InvariantCulture)
-                    };
-                    barList.Add(newBar);
-                }
-            }
-            return barList;
+                    Title = result.name,
+                    Latitude = double.Parse(result.location.latitude, CultureInfo.InvariantCulture),
+                    Longitude = double.Parse(result.location.longitude, CultureInfo.InvariantCulture)
+                }).ToList();
         }
 
-        private double convertMilesToMeters(double miles)
+        private double ConvertMilesToMeters(double miles)
         {
             return miles * 1.609344 * 1000;
         }

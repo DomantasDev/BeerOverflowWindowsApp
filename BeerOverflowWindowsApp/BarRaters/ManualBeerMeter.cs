@@ -4,44 +4,44 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace BeerOverflowWindowsApp
+namespace BeerOverflowWindowsApp.BarRaters
 {
     [Description("A manual beer meter")]
     public partial class ManualBeerMeter : Control
     {
-        private Rectangle marker;
+        private Rectangle _marker;
         public string Rating { get; private set; }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public int markerHeight
+        public int MarkerHeight
         {
             set
             {
-                this.marker.Height = value;
-                this.UpdateBeerMeter();
+                _marker.Height = value;
+                UpdateBeerMeter();
             }
-            get { return this.marker.Height; }
+            get { return _marker.Height; }
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public int markerWidth
+        public int MarkerWidth
         {
             set
             {
-                this.marker.Width = value;
-                this.UpdateBeerMeter();
+                _marker.Width = value;
+                UpdateBeerMeter();
             }
-            get { return this.marker.Width; }
+            get { return _marker.Width; }
         }
 
         Rectangle cr;
         public ManualBeerMeter()
         {
             InitializeComponent();
-            this.DoubleBuffered = true;
-            markerHeight = 10;
-            markerWidth = 30;
-            this.Refresh();
+            DoubleBuffered = true;
+            MarkerHeight = 10;
+            MarkerWidth = 30;
+            Refresh();
         }
 
         private int topY;
@@ -50,15 +50,15 @@ namespace BeerOverflowWindowsApp
         {
             cr = ClientRectangle;
             cr.Inflate(-1, -1);
-            this.UpdateBeerMeter();
+            UpdateBeerMeter();
         }
 
         public void UpdateBeerMeter()
         {
-            marker = new Rectangle((cr.Width - marker.Width) / 2, cr.Bottom - marker.Height, marker.Width, marker.Height);
-            topY = cr.Top + marker.Height / 2;
-            botY = cr.Bottom - marker.Height / 2;
-            this.Refresh();
+            _marker = new Rectangle((cr.Width - _marker.Width) / 2, cr.Bottom - _marker.Height, _marker.Width, _marker.Height);
+            topY = cr.Top + _marker.Height / 2;
+            botY = cr.Bottom - _marker.Height / 2;
+            Refresh();
         }
 
         protected override void OnPaint(PaintEventArgs pe)
@@ -66,7 +66,7 @@ namespace BeerOverflowWindowsApp
             Graphics g = pe.Graphics;
             g.FillRectangle(new SolidBrush(Parent.BackColor), cr);
             g.DrawLine(Pens.Black, cr.X + cr.Width / 2, topY, cr.X + cr.Width / 2, botY);
-            g.DrawEllipse(Pens.Black, marker);
+            g.DrawEllipse(Pens.Black, _marker);
             g.DrawString(text, new Font("Arial", 16), new SolidBrush(Color.Black), cr.X, cr.Top + 45);
         }
 
@@ -75,13 +75,13 @@ namespace BeerOverflowWindowsApp
             base.OnPaintBackground(pevent);
         }
 
-        int difference = 0;
-        private Boolean mousePressed = false;
-        private void ManualBeerMeter_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        int difference;
+        private Boolean mousePressed;
+        private void ManualBeerMeter_MouseDown(object sender, MouseEventArgs e)
         {
-            if (marker.Contains(e.X, e.Y) && e.Button == MouseButtons.Left)
+            if (_marker.Contains(e.X, e.Y) && e.Button == MouseButtons.Left)
             {
-                difference = e.Y - marker.Y;
+                difference = e.Y - _marker.Y;
                 mousePressed = true;
             }
         }
@@ -92,14 +92,14 @@ namespace BeerOverflowWindowsApp
         {
             if (mousePressed)
             {
-                marker.Y = e.Y - difference;
-                if (marker.Top < cr.Top)
-                    marker.Y = cr.Top;
-                if (marker.Bottom > cr.Bottom)
-                    marker.Y = cr.Bottom - marker.Height;
-                Rating = (int)(((float)(botY - marker.Y - marker.Height / 2)) / (((float)botY - (float)topY) / 100f)) + "";
+                _marker.Y = e.Y - difference;
+                if (_marker.Top < cr.Top)
+                    _marker.Y = cr.Top;
+                if (_marker.Bottom > cr.Bottom)
+                    _marker.Y = cr.Bottom - _marker.Height;
+                Rating = (int)((botY - _marker.Y - _marker.Height / 2) / ((botY - (float)topY) / 100f)) + "";
                 text = Rating == "100" ? textToDisplay : Rating + " %";
-                this.Refresh();
+                Refresh();
                 Thread.Sleep(5);
             }
         }

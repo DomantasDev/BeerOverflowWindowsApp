@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using BeerOverflowWindowsApp.DataModels;
 using Newtonsoft.Json;
 using static BeerOverflowWindowsApp.DataModels.FacebookDataModel;
 
-namespace BeerOverflowWindowsApp
+namespace BeerOverflowWindowsApp.BarProviders
 {
     class GetBarListFacebook : IBeerable
     {
@@ -15,7 +16,7 @@ namespace BeerOverflowWindowsApp
         private readonly string _fbAccessToken = ConfigurationManager.AppSettings["FacebookAccessToken"];
         private const string Category = "FOOD_BEVERAGE";
 
-        private List<string> fieldList = new List<string>
+        private readonly List<string> _fieldList = new List<string>
         {
             "location",
             "name"
@@ -32,7 +33,7 @@ namespace BeerOverflowWindowsApp
         private string GetFields()
         {
             var returned = "";
-            foreach (var field in fieldList)
+            foreach (var field in _fieldList)
             {
                 if (returned != "")
                 {
@@ -65,19 +66,13 @@ namespace BeerOverflowWindowsApp
 
         private List<BarData> FacebookDataToBars(PlacesResponse resultData)
         {
-            var barList = new List<BarData>();
-            
-            foreach (var result in resultData.data)
-            {
-                BarData newBar = new BarData()
+            return resultData.data.Select(result => new BarData()
                 {
                     Title = result.name,
                     Latitude = result.location.latitude,
                     Longitude = result.location.longitude
-                };
-                barList.Add(newBar);
-            }
-            return barList;
+                })
+                .ToList();
         }
     }
 }

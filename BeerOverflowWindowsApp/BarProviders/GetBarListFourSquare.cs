@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
+using BeerOverflowWindowsApp.DataModels;
 using FourSquare.SharpSquare.Core;
 using FourSquare.SharpSquare.Entities;
-using BeerOverflowWindowsApp.DataModels;
 
-namespace BeerOverflowWindowsApp
+namespace BeerOverflowWindowsApp.BarProviders
 {
     class GetBarListFourSquare : IBeerable
     {
@@ -37,18 +38,13 @@ namespace BeerOverflowWindowsApp
 
         private List<BarData> VenueListToBars (IEnumerable<Venue> resultData)
         {
-            var barList = new List<BarData>();
-            foreach (var result in resultData)
-            {
-                var newBar = new BarData
+            return resultData.Select(result => new BarData
                 {
                     Title = result.name,
                     Latitude = result.location.lat,
                     Longitude = result.location.lng
-                };
-                barList.Add(newBar);
-            }
-            return barList;
+                })
+                .ToList();
         }
     }
 }

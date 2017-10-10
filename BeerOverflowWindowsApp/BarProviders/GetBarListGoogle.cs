@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Net.Http;
-using Newtonsoft.Json;
-using static BeerOverflowWindowsApp.DataModels.GoogleDataModel;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using BeerOverflowWindowsApp.DataModels;
+using Newtonsoft.Json;
+using static BeerOverflowWindowsApp.DataModels.GoogleDataModel;
 
-namespace BeerOverflowWindowsApp
+namespace BeerOverflowWindowsApp.BarProviders
 {
     class GetBarListGoogle : IBeerable
     {
@@ -51,18 +52,13 @@ namespace BeerOverflowWindowsApp
 
         private List<BarData> PlacesApiQueryResponseToBars (PlacesApiQueryResponse resultData)
         {
-            var barList = new List<BarData>();
-            foreach (var result in resultData.Results)
-            {
-                var newBar = new BarData
+            return resultData.Results.Select(result => new BarData
                 {
                     Title = result.Name,
                     Latitude = result.Geometry.Location.Lat,
                     Longitude = result.Geometry.Location.Lng
-                };
-                barList.Add(newBar);
-            }
-            return barList;
+                })
+                .ToList();
         }
     }
 }
