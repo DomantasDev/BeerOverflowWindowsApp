@@ -26,7 +26,7 @@ namespace BeerOverflowWindowsApp
             }
             barData.Ratings.Add(rating);
             // Update local copy of list
-            BarsData.BarsList.Find(x => x == barData).Ratings = barData.Ratings;
+            BarsData.BarsList.Find(x => x.Title == barData.Title).Ratings = barData.Ratings;
 
             if (allBars.BarsList.Count > 0)
             {
